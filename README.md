@@ -1,16 +1,16 @@
-# Google Form Auto-Fill Tool
+# Form Auto-Fill Tool
 
 > **⚠️ QUAN TRỌNG: Đây là dự án mục đích học tập, chúng tôi không chịu trách nhiệm mọi trường hợp. Vui lòng chỉ để tham khảo.**
 
-Một công cụ desktop tự động điền Google Forms với giao diện hiện đại, hỗ trợ tất cả loại câu hỏi và nhiều chiến lược điền khác nhau.
+Một công cụ desktop tự động điền form trực tuyến với giao diện hiện đại, hỗ trợ tất cả loại câu hỏi và nhiều chiến lược điền khác nhau.
 
 ## 🚀 Tính năng chính
 
 ### 📋 Quét Form
-- **Tự động phát hiện**: Quét và phân tích cấu trúc Google Form
+- **Tự động phát hiện**: Quét và phân tích cấu trúc form trực tuyến
 - **Đa loại câu hỏi**: Hỗ trợ text, multiple choice, checkbox, dropdown, linear scale, date, time, file upload
 - **Multi-page support**: Quét form có nhiều trang
-- **Anti-detection**: Stealth mode để tránh bị Google phát hiện
+- **Anti-detection**: Stealth mode để tránh bị phát hiện
 
 ### ⚙️ Cấu hình linh hoạt
 - **Chiến lược điền**: Random, Fixed, Sequential, Pattern, Skip
@@ -82,9 +82,9 @@ npm start
 
 ## 📖 Hướng dẫn sử dụng
 
-### 1. Quét Google Form
+### 1. Quét Form
 1. Mở ứng dụng
-2. Nhập URL Google Form vào ô "Form URL"
+2. Nhập URL form vào ô "Form URL"
 3. Click "Quét Form"
 4. Đợi tool phân tích và hiển thị câu hỏi
 
@@ -280,7 +280,7 @@ MIT License - Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
 
 - Tool này chỉ dành cho mục đích học tập và nghiên cứu
 - Không sử dụng cho mục đích spam hoặc vi phạm ToS
-- Tuân thủ Terms of Service của Google Forms
+- Tuân thủ Terms of Service của các dịch vụ form
 - Sử dụng có trách nhiệm và đạo đức
 
 ## 📞 Support

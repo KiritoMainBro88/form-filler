@@ -1,6 +1,6 @@
-# Mock Google Forms for Testing
+# Mock Forms for Testing
 
-This directory contains mock Google Forms that replicate the structure and behavior of real Google Forms for testing purposes.
+This directory contains mock forms that replicate the structure and behavior of real online forms for testing purposes.
 
 ## Available Mock Forms
 
@@ -53,7 +53,7 @@ node test-all-mock-forms.js
 
 ## Form Structure
 
-Both mock forms use the same HTML structure as real Google Forms:
+Both mock forms use the same HTML structure as real online forms:
 
 - **Container**: `.Qr7Oae` elements for each question
 - **Question Text**: `.M7eMe` spans containing the question text

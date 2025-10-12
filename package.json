@@ -1,7 +1,7 @@
 {
-  "name": "google-form-auto-fill-tool",
+  "name": "form-auto-fill-tool",
   "version": "1.0.0",
-  "description": "Tool tự động điền Google Form với desktop dashboard",
+  "description": "Tool tự động điền form với desktop dashboard",
   "main": "dist/main/main/main.js",
   "scripts": {
     "dev": "concurrently \"npm run dev:main\" \"npm run dev:renderer\"",

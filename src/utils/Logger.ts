@@ -19,7 +19,7 @@ export class Logger {
         winston.format.errors({ stack: true }),
         winston.format.json()
       ),
-      defaultMeta: { service: 'google-form-auto-fill' },
+      defaultMeta: { service: 'form-auto-fill' },
       transports: [
         // Write all logs with importance level of `error` or less to `error.log`
         new winston.transports.File({ 
