@@ -1,0 +1,18 @@
+{
+  "formUrl": "https://docs.google.com/forms/d/e/1FAIpQLSd93uUXSzEdPzedQt1xVuCW2K-CIusm6h2GJm6W-z5zYfnpDw/viewform",
+  "formTitle": "Bản sao của T-shirt Order Form",
+  "savedAt": "2025-10-12T15:25:38.413Z",
+  "fillStrategies": {
+    "entry.6": {
+      "strategy": "random",
+      "selectedOptions": [
+        "2"
+      ]
+    }
+  },
+  "executionSettings": {
+    "runs": 1,
+    "delayBetweenRuns": 2000,
+    "headless": false
+  }
+}

@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="vi" class="HB1eCd-UMrnmb PHOcVb">
+<head>
+    <link rel="shortcut icon" sizes="16x16" href="https://ssl.gstatic.com/docs/spreadsheets/forms/favicon_qp2.png">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Extended" rel="stylesheet">
+    <title>Comprehensive Test Form</title>
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans_old:400,500|Roboto_old:300,400,400i,500,700&subset=latin,vietnamese,latin-ext,cyrillic,greek,cyrillic-ext,greek-ext" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .form-title {
+            font-size: 24px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .required-note {
+            color: #d93025;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .Qr7Oae {
+            margin-bottom: 24px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 16px;
+            background: #fafafa;
+        }
+        .M7eMe {
+            font-size: 16px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 8px;
+            display: block;
+        }
+        .vnumgf {
+            color: #d93025;
+        }
+        .input-container {
+            margin-top: 8px;
+        }
+        .whsOnd {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        .whsOnd:focus {
+            border-color: #1a73e8;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        .placeholder-text {
+            color: #5f6368;
+            font-size: 14px;
+            margin-top: 4px;
+        }
+        .radio-option, .checkbox-option {
+            margin: 8px 0;
+            display: flex;
+            align-items: center;
+        }
+        .radio-option input, .checkbox-option input {
+            margin-right: 8px;
+        }
+        .radio-option label, .checkbox-option label {
+            font-size: 14px;
+            color: #202124;
+        }
+        select.whsOnd {
+            background: white;
+        }
+        textarea.whsOnd {
+            min-height: 100px;
+            resize: vertical;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-title">Comprehensive Test Form</div>
+        <div class="required-note">* Biểu thị câu hỏi bắt buộc</div>
+        
+        <form action="#" method="POST">
+            <div class="o3Dpx" role="list">
+                <!-- Question 1: Short Answer Text -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">What is your name?</span>
+                                    <span class="vnumgf" aria-label="Câu hỏi bắt buộc"> *</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <input type="text" class="whsOnd" name="entry.123456789" required>
+                                <div class="placeholder-text">Câu trả lời của bạn</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 2: Multiple Choice -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">What is your favorite color?</span>
+                                    <span class="vnumgf" aria-label="Câu hỏi bắt buộc"> *</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <div class="radio-option">
+                                    <input type="radio" name="entry.987654321" value="Red" required>
+                                    <label>Red</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="entry.987654321" value="Blue" required>
+                                    <label>Blue</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="entry.987654321" value="Green" required>
+                                    <label>Green</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" name="entry.987654321" value="Other" required>
+                                    <label>Other</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 3: Checkbox -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">Which programming languages do you know?</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <div class="checkbox-option">
+                                    <input type="checkbox" name="entry.456789123" value="JavaScript">
+                                    <label>JavaScript</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" name="entry.456789123" value="Python">
+                                    <label>Python</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" name="entry.456789123" value="Java">
+                                    <label>Java</label>
+                                </div>
+                                <div class="checkbox-option">
+                                    <input type="checkbox" name="entry.456789123" value="C++">
+                                    <label>C++</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 4: Dropdown -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">What is your experience level?</span>
+                                    <span class="vnumgf" aria-label="Câu hỏi bắt buộc"> *</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <select class="whsOnd" name="entry.789123456" required>
+                                    <option value="">Select an option</option>
+                                    <option value="Beginner">Beginner</option>
+                                    <option value="Intermediate">Intermediate</option>
+                                    <option value="Advanced">Advanced</option>
+                                    <option value="Expert">Expert</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 5: Linear Scale -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">Rate your satisfaction (1-5)</span>
+                                    <span class="vnumgf" aria-label="Câu hỏi bắt buộc"> *</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <span>1</span>
+                                    <div class="radio-option">
+                                        <input type="radio" name="entry.321654987" value="1" required>
+                                        <label>1</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" name="entry.321654987" value="2" required>
+                                        <label>2</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" name="entry.321654987" value="3" required>
+                                        <label>3</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" name="entry.321654987" value="4" required>
+                                        <label>4</label>
+                                    </div>
+                                    <div class="radio-option">
+                                        <input type="radio" name="entry.321654987" value="5" required>
+                                        <label>5</label>
+                                    </div>
+                                    <span>5</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 6: Paragraph Text -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">Tell us about yourself</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <textarea class="whsOnd" name="entry.654987321" rows="4"></textarea>
+                                <div class="placeholder-text">Câu trả lời của bạn</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 7: Date -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">What is your birth date?</span>
+                                    <span class="vnumgf" aria-label="Câu hỏi bắt buộc"> *</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <input type="date" class="whsOnd" name="entry.147258369" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Question 8: Time -->
+                <div class="Qr7Oae" role="listitem">
+                    <div class="geS5n">
+                        <div class="z12JJ">
+                            <div class="M4DNQ">
+                                <div class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3">
+                                    <span class="M7eMe">What time do you prefer for meetings?</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="AgroKb">
+                            <div class="input-container">
+                                <input type="time" class="whsOnd" name="entry.369258147">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px;">
+                <button type="submit" style="background: #1a73e8; color: white; border: none; padding: 12px 24px; border-radius: 4px; font-size: 14px; cursor: pointer;">
+                    Gửi
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Simulate form submission
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Câu trả lời của bạn đã được ghi lại.');
+        });
+    </script>
+</body>
+</html>

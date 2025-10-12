@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Google Form - Auto Fill Tool</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 20px;
+        }
+        .form-container {
+            max-width: 640px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+            padding: 24px;
+        }
+        .form-title {
+            font-size: 32px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 8px;
+        }
+        .form-description {
+            font-size: 14px;
+            color: #5f6368;
+            margin-bottom: 24px;
+        }
+        .question-container {
+            margin-bottom: 24px;
+            padding: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+        .question-title {
+            font-size: 16px;
+            font-weight: 400;
+            color: #202124;
+            margin-bottom: 8px;
+        }
+        .required {
+            color: #d93025;
+        }
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            font-size: 14px;
+            margin-top: 8px;
+        }
+        .input-field:focus {
+            outline: none;
+            border-color: #1a73e8;
+            box-shadow: 0 0 0 2px rgba(26, 115, 232, 0.2);
+        }
+        .submit-button {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-top: 16px;
+        }
+        .submit-button:hover {
+            background-color: #1557b0;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1 class="form-title">Test Form - Google Form Auto Fill Tool</h1>
+        <p class="form-description">Form này được tạo để test khả năng detect câu hỏi của tool</p>
+        
+        <!-- Question 1: Text Input -->
+        <div class="Qr7Oae" role="listitem">
+            <div jsmodel="CP1oW" data-params="%.@.[1957320273,&quot;Enter your Nickname &quot;,null,0,[[1602598305,null,true,null,null,null,null,null,null,null,[]]],null,null,null,null,null,null,[null,&quot;Enter your Nickname &quot;]],&quot;i1&quot;,&quot;i2&quot;,&quot;i3&quot;,false,&quot;i4&quot;]">
+                <div jscontroller="sWGJ4b" jsaction="EEvAHc:yfX9oc;" jsname="WsjYwc" class="geS5n">
+                    <div class="z12JJ">
+                        <div class="M4DNQ">
+                            <div id="i1" class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3" aria-describedby="i5">
+                                <span class="M7eMe">Enter your Nickname </span>
+                                <span class="vnumgf" id="i5" aria-label="Câu hỏi bắt buộc"> *</span>
+                            </div>
+                            <div class="gubaDc OIC90c RjsPE" id="i2"></div>
+                        </div>
+                    </div>
+                    <div jscontroller="oCiKKc" jsaction="rcuQ6b:vZc4S;O22p3e:zjh6rb;b2trFe:eVidQc;sPvj8e:d3sQLd;AHmuwe:h06R8;" class="AgroKb">
+                        <div class="rFrNMe k3kHxc RdH0ib yqQS1 zKHdkd" jscontroller="pxq3x" jsaction="clickonly:KjsqPd; focus:Jt1EX; blur:fpfTEe; input:Lg5SV" jsshadow="" jsname="YPqjbf">
+                            <div class="aCsJod oJeWuf">
+                                <div class="aXBtI Wic03c">
+                                    <div class="Xb9hP">
+                                        <input type="text" class="whsOnd zHQkBf" jsname="YPqjbf" autocomplete="off" tabindex="0" aria-labelledby="i1 i4" aria-describedby="i2 i3" aria-disabled="false" required="" dir="auto" data-initial-dir="auto" data-initial-value="">
+                                        <div jsname="LwH6nd" class="ndJi5d snByac" aria-hidden="true">Câu trả lời của bạn</div>
+                                    </div>
+                                    <div class="i9lrp mIZh1c"></div>
+                                    <div jsname="XmnwAc" class="OabDMe cXrdqd"></div>
+                                </div>
+                            </div>
+                            <div class="LXRPh">
+                                <div jsname="ty6ygf" class="ovnfwe Is7Fhb"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div jsname="Rfh2Tc" class="SL4Sz" id="i3" role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 2: Email Input -->
+        <div class="Qr7Oae" role="listitem">
+            <div jsmodel="CP1oW" data-params="%.@.[1957320274,&quot;What is your email address?&quot;,null,0,[[1602598305,null,true,null,null,null,null,null,null,null,[]]],null,null,null,null,null,null,[null,&quot;What is your email address?&quot;]],&quot;i6&quot;,&quot;i7&quot;,&quot;i8&quot;,false,&quot;i9&quot;]">
+                <div jscontroller="sWGJ4b" jsaction="EEvAHc:yfX9oc;" jsname="WsjYwc" class="geS5n">
+                    <div class="z12JJ">
+                        <div class="M4DNQ">
+                            <div id="i6" class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3" aria-describedby="i10">
+                                <span class="M7eMe">What is your email address? </span>
+                                <span class="vnumgf" id="i10" aria-label="Câu hỏi bắt buộc"> *</span>
+                            </div>
+                            <div class="gubaDc OIC90c RjsPE" id="i7"></div>
+                        </div>
+                    </div>
+                    <div jscontroller="oCiKKc" jsaction="rcuQ6b:vZc4S;O22p3e:zjh6rb;b2trFe:eVidQc;sPvj8e:d3sQLd;AHmuwe:h06R8;" class="AgroKb">
+                        <div class="rFrNMe k3kHxc RdH0ib yqQS1 zKHdkd" jscontroller="pxq3x" jsaction="clickonly:KjsqPd; focus:Jt1EX; blur:fpfTEe; input:Lg5SV" jsshadow="" jsname="YPqjbf">
+                            <div class="aCsJod oJeWuf">
+                                <div class="aXBtI Wic03c">
+                                    <div class="Xb9hP">
+                                        <input type="email" class="whsOnd zHQkBf" jsname="YPqjbf" autocomplete="off" tabindex="0" aria-labelledby="i6 i9" aria-describedby="i7 i8" aria-disabled="false" required="" dir="auto" data-initial-dir="auto" data-initial-value="">
+                                        <div jsname="LwH6nd" class="ndJi5d snByac" aria-hidden="true">Câu trả lời của bạn</div>
+                                    </div>
+                                    <div class="i9lrp mIZh1c"></div>
+                                    <div jsname="XmnwAc" class="OabDMe cXrdqd"></div>
+                                </div>
+                            </div>
+                            <div class="LXRPh">
+                                <div jsname="ty6ygf" class="ovnfwe Is7Fhb"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div jsname="Rfh2Tc" class="SL4Sz" id="i8" role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 3: Multiple Choice -->
+        <div class="Qr7Oae" role="listitem">
+            <div jsmodel="CP1oW" data-params="%.@.[1957320275,&quot;What is your age range?&quot;,null,0,[[1602598305,null,true,null,null,null,null,null,null,null,[]]],null,null,null,null,null,null,[null,&quot;What is your age range?&quot;]],&quot;i11&quot;,&quot;i12&quot;,&quot;i13&quot;,false,&quot;i14&quot;]">
+                <div jscontroller="sWGJ4b" jsaction="EEvAHc:yfX9oc;" jsname="WsjYwc" class="geS5n">
+                    <div class="z12JJ">
+                        <div class="M4DNQ">
+                            <div id="i11" class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3" aria-describedby="i15">
+                                <span class="M7eMe">What is your age range? </span>
+                                <span class="vnumgf" id="i15" aria-label="Câu hỏi bắt buộc"> *</span>
+                            </div>
+                            <div class="gubaDc OIC90c RjsPE" id="i12"></div>
+                        </div>
+                    </div>
+                    <div jscontroller="oCiKKc" jsaction="rcuQ6b:vZc4S;O22p3e:zjh6rb;b2trFe:eVidQc;sPvj8e:d3sQLd;AHmuwe:h06R8;" class="AgroKb">
+                        <div class="rFrNMe k3kHxc RdH0ib yqQS1 zKHdkd" jscontroller="pxq3x" jsaction="clickonly:KjsqPd; focus:Jt1EX; blur:fpfTEe; input:Lg5SV" jsshadow="" jsname="YPqjbf">
+                            <div class="aCsJod oJeWuf">
+                                <div class="aXBtI Wic03c">
+                                    <div class="Xb9hP">
+                                        <div role="radiogroup" aria-labelledby="i11">
+                                            <div class="N9cuyc">
+                                                <label class="docssharedWizToggleLabeledContainer freebirdFormviewerViewItemsRadioChoice">
+                                                    <input type="radio" name="age" value="18-25" class="freebirdFormviewerViewItemsRadioControl">
+                                                    <span class="freebirdFormviewerViewItemsRadioLabel">18-25</span>
+                                                </label>
+                                            </div>
+                                            <div class="N9cuyc">
+                                                <label class="docssharedWizToggleLabeledContainer freebirdFormviewerViewItemsRadioChoice">
+                                                    <input type="radio" name="age" value="26-35" class="freebirdFormviewerViewItemsRadioControl">
+                                                    <span class="freebirdFormviewerViewItemsRadioLabel">26-35</span>
+                                                </label>
+                                            </div>
+                                            <div class="N9cuyc">
+                                                <label class="docssharedWizToggleLabeledContainer freebirdFormviewerViewItemsRadioChoice">
+                                                    <input type="radio" name="age" value="36-45" class="freebirdFormviewerViewItemsRadioControl">
+                                                    <span class="freebirdFormviewerViewItemsRadioLabel">36-45</span>
+                                                </label>
+                                            </div>
+                                            <div class="N9cuyc">
+                                                <label class="docssharedWizToggleLabeledContainer freebirdFormviewerViewItemsRadioChoice">
+                                                    <input type="radio" name="age" value="46+" class="freebirdFormviewerViewItemsRadioControl">
+                                                    <span class="freebirdFormviewerViewItemsRadioLabel">46+</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="i9lrp mIZh1c"></div>
+                                    <div jsname="XmnwAc" class="OabDMe cXrdqd"></div>
+                                </div>
+                            </div>
+                            <div class="LXRPh">
+                                <div jsname="ty6ygf" class="ovnfwe Is7Fhb"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div jsname="Rfh2Tc" class="SL4Sz" id="i13" role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 4: Vietnamese Question -->
+        <div class="Qr7Oae" role="listitem">
+            <div jsmodel="CP1oW" data-params="%.@.[1957320276,&quot;Anh/Chị có đang sinh sống tại Tp. Hồ Chí Minh không?&quot;,null,0,[[1602598305,null,true,null,null,null,null,null,null,null,[]]],null,null,null,null,null,null,[null,&quot;Anh/Chị có đang sinh sống tại Tp. Hồ Chí Minh không?&quot;]],&quot;i16&quot;,&quot;i17&quot;,&quot;i18&quot;,false,&quot;i19&quot;]">
+                <div jscontroller="sWGJ4b" jsaction="EEvAHc:yfX9oc;" jsname="WsjYwc" class="geS5n">
+                    <div class="z12JJ">
+                        <div class="M4DNQ">
+                            <div id="i16" class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3" aria-describedby="i20">
+                                <span class="M7eMe">Anh/Chị có đang sinh sống tại Tp. Hồ Chí Minh không? </span>
+                                <span class="vnumgf" id="i20" aria-label="Câu hỏi bắt buộc"> *</span>
+                            </div>
+                            <div class="gubaDc OIC90c RjsPE" id="i17"></div>
+                        </div>
+                    </div>
+                    <div jscontroller="oCiKKc" jsaction="rcuQ6b:vZc4S;O22p3e:zjh6rb;b2trFe:eVidQc;sPvj8e:d3sQLd;AHmuwe:h06R8;" class="AgroKb">
+                        <div class="rFrNMe k3kHxc RdH0ib yqQS1 zKHdkd" jscontroller="pxq3x" jsaction="clickonly:KjsqPd; focus:Jt1EX; blur:fpfTEe; input:Lg5SV" jsshadow="" jsname="YPqjbf">
+                            <div class="aCsJod oJeWuf">
+                                <div class="aXBtI Wic03c">
+                                    <div class="Xb9hP">
+                                        <div role="radiogroup" aria-labelledby="i16">
+                                            <div class="N9cuyc">
+                                                <label class="docssharedWizToggleLabeledContainer freebirdFormviewerViewItemsRadioChoice">
+                                                    <input type="radio" name="location" value="Có" class="freebirdFormviewerViewItemsRadioControl">
+                                                    <span class="freebirdFormviewerViewItemsRadioLabel">Có</span>
+                                                </label>
+                                            </div>
+                                            <div class="N9cuyc">
+                                                <label class="docssharedWizToggleLabeledContainer freebirdFormviewerViewItemsRadioChoice">
+                                                    <input type="radio" name="location" value="Không" class="freebirdFormviewerViewItemsRadioControl">
+                                                    <span class="freebirdFormviewerViewItemsRadioLabel">Không</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="i9lrp mIZh1c"></div>
+                                    <div jsname="XmnwAc" class="OabDMe cXrdqd"></div>
+                                </div>
+                            </div>
+                            <div class="LXRPh">
+                                <div jsname="ty6ygf" class="ovnfwe Is7Fhb"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div jsname="Rfh2Tc" class="SL4Sz" id="i18" role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Question 5: Textarea -->
+        <div class="Qr7Oae" role="listitem">
+            <div jsmodel="CP1oW" data-params="%.@.[1957320277,&quot;Please tell us about your experience&quot;,null,0,[[1602598305,null,true,null,null,null,null,null,null,null,[]]],null,null,null,null,null,null,[null,&quot;Please tell us about your experience&quot;]],&quot;i21&quot;,&quot;i22&quot;,&quot;i23&quot;,false,&quot;i24&quot;]">
+                <div jscontroller="sWGJ4b" jsaction="EEvAHc:yfX9oc;" jsname="WsjYwc" class="geS5n">
+                    <div class="z12JJ">
+                        <div class="M4DNQ">
+                            <div id="i21" class="HoXoMd D1wxyf RjsPE" role="heading" aria-level="3" aria-describedby="i25">
+                                <span class="M7eMe">Please tell us about your experience </span>
+                                <span class="vnumgf" id="i25" aria-label="Câu hỏi bắt buộc"> *</span>
+                            </div>
+                            <div class="gubaDc OIC90c RjsPE" id="i22"></div>
+                        </div>
+                    </div>
+                    <div jscontroller="oCiKKc" jsaction="rcuQ6b:vZc4S;O22p3e:zjh6rb;b2trFe:eVidQc;sPvj8e:d3sQLd;AHmuwe:h06R8;" class="AgroKb">
+                        <div class="rFrNMe k3kHxc RdH0ib yqQS1 zKHdkd" jscontroller="pxq3x" jsaction="clickonly:KjsqPd; focus:Jt1EX; blur:fpfTEe; input:Lg5SV" jsshadow="" jsname="YPqjbf">
+                            <div class="aCsJod oJeWuf">
+                                <div class="aXBtI Wic03c">
+                                    <div class="Xb9hP">
+                                        <textarea class="whsOnd zHQkBf" jsname="YPqjbf" autocomplete="off" tabindex="0" aria-labelledby="i21 i24" aria-describedby="i22 i23" aria-disabled="false" required="" dir="auto" data-initial-dir="auto" rows="4" placeholder="Câu trả lời của bạn"></textarea>
+                                    </div>
+                                    <div class="i9lrp mIZh1c"></div>
+                                    <div jsname="XmnwAc" class="OabDMe cXrdqd"></div>
+                                </div>
+                            </div>
+                            <div class="LXRPh">
+                                <div jsname="ty6ygf" class="ovnfwe Is7Fhb"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div jsname="Rfh2Tc" class="SL4Sz" id="i23" role="alert"></div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="submit-button">Submit</button>
+    </div>
+</body>
+</html>
