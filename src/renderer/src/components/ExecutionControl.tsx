@@ -1,122 +1,86 @@
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { Button } from './ui/button'
+import { Input } from './ui/input'
+import { Label } from './ui/label'
+import { Switch } from './ui/switch'
 import { Progress } from './ui/progress'
 import { Badge } from './ui/badge'
 import { Separator } from './ui/separator'
 import { ScrollArea } from './ui/scroll-area'
 import { Alert, AlertDescription } from './ui/alert'
-import { Play, CheckCircle, XCircle, Clock, Loader2 } from 'lucide-react'
-import { FormConfig, FillingProgress } from '../App'
+import { Play, FlaskConical, Loader2, ShieldAlert, ImageIcon } from 'lucide-react'
+import type {
+  AnswerPlan,
+  ExecutionSettings,
+  FillingProgress,
+  FillingResult,
+} from '../types'
 
 interface ExecutionControlProps {
-  config: FormConfig | null
+  plan: AnswerPlan | null
+  execution: ExecutionSettings
+  setExecution: (e: ExecutionSettings) => void
   isFilling: boolean
   fillingProgress: FillingProgress | null
   logs: string[]
   onFillingStarted: () => void
-  onFillingProgress: (progress: FillingProgress) => void
-  onFillingCompleted: (result: any) => void
+  onFillingProgress: (p: FillingProgress) => void
+  onFillingCompleted: () => void
   addLog: (message: string) => void
 }
 
 export function ExecutionControl({
-  config,
+  plan,
+  execution,
+  setExecution,
   isFilling,
   fillingProgress,
   logs,
   onFillingStarted,
   onFillingProgress,
   onFillingCompleted,
-  addLog
+  addLog,
 }: ExecutionControlProps) {
-  const [isStarting, setIsStarting] = useState(false)
+  const [dryRunDone, setDryRunDone] = useState(false)
+  const [result, setResult] = useState<FillingResult | null>(null)
 
   useEffect(() => {
-    // Listen for progress updates from main process
-    const handleProgress = (progress: FillingProgress) => {
-      onFillingProgress(progress)
-    }
-
-    window.electronAPI.onFillingProgress(handleProgress)
-
-    return () => {
-      window.electronAPI.removeAllListeners('filling-progress')
-    }
+    const handler = (progress: FillingProgress) => onFillingProgress(progress)
+    window.electronAPI.onFillingProgress(handler)
+    return () => window.electronAPI.removeAllListeners('filling-progress')
   }, [onFillingProgress])
 
-  const handleStartFilling = async () => {
-    if (!config) {
-      addLog('Không có cấu hình để thực thi')
-      return
-    }
+  if (!plan) {
+    return (
+      <Alert>
+        <AlertDescription>Chưa có kế hoạch để thực thi.</AlertDescription>
+      </Alert>
+    )
+  }
 
-    setIsStarting(true)
+  const run = async (dryRun: boolean) => {
     onFillingStarted()
-
+    setResult(null)
+    addLog(dryRun ? 'Bắt đầu chạy thử (không gửi form)...' : 'Bắt đầu chạy thật...')
     try {
-      const result = await window.electronAPI.startFilling(config)
-      onFillingCompleted(result)
+      const res = await window.electronAPI.startFilling({ plan, execution, dryRun })
+      setResult(res)
+      if (dryRun) {
+        setDryRunDone(true)
+        addLog('Chạy thử xong. Kiểm tra ảnh chụp để duyệt trước khi chạy thật.')
+      } else {
+        addLog(`Hoàn tất: ${res.successCount}/${res.totalRuns} thành công, ${res.errorCount} lỗi.`)
+      }
     } catch (error: any) {
-      addLog(`Lỗi khi thực thi: ${error.message}`)
+      addLog(`Lỗi: ${error.message}`)
     } finally {
-      setIsStarting(false)
+      onFillingCompleted()
     }
   }
 
-  const getStatusIcon = (status: FillingProgress['status']) => {
-    switch (status) {
-      case 'starting':
-        return <Clock className="h-4 w-4" />
-      case 'filling':
-        return <Loader2 className="h-4 w-4 animate-spin" />
-      case 'submitting':
-        return <Loader2 className="h-4 w-4 animate-spin" />
-      case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
-      case 'error':
-        return <XCircle className="h-4 w-4 text-red-500" />
-      default:
-        return <Clock className="h-4 w-4" />
-    }
-  }
-
-  const getStatusColor = (status: FillingProgress['status']) => {
-    switch (status) {
-      case 'starting':
-        return 'bg-blue-100 text-blue-800'
-      case 'filling':
-        return 'bg-yellow-100 text-yellow-800'
-      case 'submitting':
-        return 'bg-orange-100 text-orange-800'
-      case 'completed':
-        return 'bg-green-100 text-green-800'
-      case 'error':
-        return 'bg-red-100 text-red-800'
-      default:
-        return 'bg-gray-100 text-gray-800'
-    }
-  }
-
-  const getStatusLabel = (status: FillingProgress['status']) => {
-    switch (status) {
-      case 'starting':
-        return 'Đang bắt đầu'
-      case 'filling':
-        return 'Đang điền form'
-      case 'submitting':
-        return 'Đang gửi form'
-      case 'completed':
-        return 'Hoàn thành'
-      case 'error':
-        return 'Lỗi'
-      default:
-        return 'Chờ'
-    }
-  }
-
-  const progressPercentage = fillingProgress 
-    ? (fillingProgress.currentRun / fillingProgress.totalRuns) * 100 
+  const progressPct = fillingProgress
+    ? (fillingProgress.currentRun / Math.max(1, fillingProgress.totalRuns)) * 100
     : 0
 
   return (
@@ -125,138 +89,186 @@ export function ExecutionControl({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Play className="h-5 w-5" />
-            Thực thi Form Filling
+            Thực thi
           </CardTitle>
-          <CardDescription>
-            {config ? `Cấu hình: ${config.formTitle}` : 'Chưa có cấu hình'}
-          </CardDescription>
+          <CardDescription>{plan.formTitle}</CardDescription>
         </CardHeader>
-        <CardContent>
-          {config ? (
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{config.executionSettings.runs}</div>
-                  <div className="text-sm text-muted-foreground">Số lần chạy</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">{config.executionSettings.delayBetweenRuns}ms</div>
-                  <div className="text-sm text-muted-foreground">Độ trễ</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold">
-                    {config.executionSettings.headless ? 'Ẩn' : 'Hiện'}
-                  </div>
-                  <div className="text-sm text-muted-foreground">Chế độ browser</div>
-                </div>
-              </div>
-
-              <Separator />
-
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm font-medium">Tiến độ</span>
-                  {fillingProgress && (
-                    <Badge className={getStatusColor(fillingProgress.status)}>
-                      {getStatusIcon(fillingProgress.status)}
-                      <span className="ml-1">{getStatusLabel(fillingProgress.status)}</span>
-                    </Badge>
-                  )}
-                </div>
-
-                {fillingProgress && (
-                  <div className="space-y-2">
-                    <Progress value={progressPercentage} className="w-full" />
-                    <div className="flex justify-between text-sm text-muted-foreground">
-                      <span>Lần {fillingProgress.currentRun}/{fillingProgress.totalRuns}</span>
-                      <span>{Math.round(progressPercentage)}%</span>
-                    </div>
-                  </div>
-                )}
-
-                {fillingProgress && (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center">
-                      <div className="text-lg font-semibold text-green-600">
-                        {fillingProgress.successCount}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Thành công</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-lg font-semibold text-red-600">
-                        {fillingProgress.errorCount}
-                      </div>
-                      <div className="text-sm text-muted-foreground">Lỗi</div>
-                    </div>
-                  </div>
-                )}
-
-                {fillingProgress?.currentQuestion && (
-                  <Alert>
-                    <AlertDescription>
-                      <strong>Đang xử lý:</strong> {fillingProgress.currentQuestion}
-                    </AlertDescription>
-                  </Alert>
-                )}
-
-                {fillingProgress?.message && (
-                  <Alert>
-                    <AlertDescription>
-                      {fillingProgress.message}
-                    </AlertDescription>
-                  </Alert>
-                )}
-              </div>
-
-              <Separator />
-
-              <div className="flex gap-2">
-                <Button 
-                  onClick={handleStartFilling}
-                  disabled={isFilling || isStarting}
-                  className="flex-1"
-                >
-                  {isFilling || isStarting ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      {isStarting ? 'Đang bắt đầu...' : 'Đang chạy...'}
-                    </>
-                  ) : (
-                    <>
-                      <Play className="mr-2 h-4 w-4" />
-                      Bắt đầu
-                    </>
-                  )}
-                </Button>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="runs">Số lần chạy</Label>
+              <Input
+                id="runs"
+                type="number"
+                min={1}
+                max={500}
+                value={execution.runs}
+                onChange={(e) =>
+                  setExecution({ ...execution, runs: parseInt(e.target.value) || 1 })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="delay">Độ trễ giữa các lần (ms)</Label>
+              <Input
+                id="delay"
+                type="number"
+                min={500}
+                step={500}
+                value={execution.delayBetweenRuns}
+                onChange={(e) =>
+                  setExecution({ ...execution, delayBetweenRuns: parseInt(e.target.value) || 2000 })
+                }
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="headless">Chế độ ẩn browser</Label>
+              <div className="flex items-center space-x-2 pt-2">
+                <Switch
+                  id="headless"
+                  checked={execution.headless}
+                  onCheckedChange={(checked) => setExecution({ ...execution, headless: checked })}
+                />
+                <Label htmlFor="headless" className="text-sm">
+                  {execution.headless ? 'Ẩn' : 'Hiện'}
+                </Label>
               </div>
             </div>
-          ) : (
-            <Alert>
-              <AlertDescription>
-                Vui lòng quét form và lưu cấu hình trước khi thực thi.
-              </AlertDescription>
-            </Alert>
+          </div>
+
+          <Alert>
+            <ShieldAlert className="h-4 w-4" />
+            <AlertDescription>
+              Bắt buộc chạy thử (dry-run) trước. Dry-run điền đầy đủ nhưng KHÔNG gửi form. Chỉ khi
+              dry-run xong bạn mới mở khoá được nút chạy thật.
+            </AlertDescription>
+          </Alert>
+
+          <div className="flex flex-wrap gap-2">
+            <Button onClick={() => run(true)} disabled={isFilling} variant="outline">
+              {isFilling ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <FlaskConical className="mr-2 h-4 w-4" />
+              )}
+              Chạy thử (Dry-run)
+            </Button>
+            <Button onClick={() => run(false)} disabled={isFilling || !dryRunDone}>
+              {isFilling ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Play className="mr-2 h-4 w-4" />
+              )}
+              Chạy thật ({execution.runs} lần)
+            </Button>
+          </div>
+
+          {fillingProgress && (
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Tiến độ</span>
+                <Badge>{fillingProgress.status}</Badge>
+              </div>
+              <Progress value={progressPct} />
+              <div className="flex justify-between text-sm text-muted-foreground">
+                <span>
+                  Lần {fillingProgress.currentRun}/{fillingProgress.totalRuns}
+                </span>
+                <span>
+                  ✓ {fillingProgress.successCount} · ✕ {fillingProgress.errorCount}
+                </span>
+              </div>
+              {fillingProgress.currentQuestion && (
+                <p className="text-xs text-muted-foreground">
+                  Đang xử lý: {fillingProgress.currentQuestion}
+                </p>
+              )}
+            </div>
           )}
         </CardContent>
       </Card>
 
+      {result && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{result.dryRun ? 'Kết quả chạy thử' : 'Kết quả'}</CardTitle>
+            <CardDescription>
+              {result.successCount}/{result.totalRuns} thành công · {result.errorCount} lỗi ·{' '}
+              {(result.duration / 1000).toFixed(1)}s
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {result.screenshots.length > 0 && (
+              <div className="space-y-2">
+                <p className="text-sm font-medium flex items-center gap-2">
+                  <ImageIcon className="h-4 w-4" />
+                  Ảnh chụp ({result.screenshots.length})
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {result.screenshots.map((shot, i) => (
+                    <Button
+                      key={i}
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.electronAPI.openScreenshot(shot)}
+                    >
+                      Xem ảnh {i + 1}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {result.errors.length > 0 && (
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-red-600">Lỗi</p>
+                {result.errors.map((e, i) => (
+                  <p key={i} className="text-xs text-red-600">
+                    Lần {e.run}: {e.error}
+                  </p>
+                ))}
+              </div>
+            )}
+
+            {Object.keys(result.distribution).length > 0 && (
+              <div className="space-y-2">
+                <Separator />
+                <p className="text-sm font-medium">Phân phối thực tế</p>
+                <ScrollArea className="h-48 pr-3">
+                  <div className="space-y-3">
+                    {Object.entries(result.distribution).map(([id, d]) => (
+                      <div key={id}>
+                        <p className="text-xs font-medium">{d.question}</p>
+                        <div className="text-xs text-muted-foreground">
+                          {Object.entries(d.counts).map(([val, count]) => (
+                            <span key={val} className="mr-3">
+                              {val}: {count}
+                            </span>
+                          ))}
+                          {Object.keys(d.counts).length === 0 && <span>(không có dữ liệu)</span>}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
       <Card>
         <CardHeader>
           <CardTitle>Logs</CardTitle>
-          <CardDescription>
-            Theo dõi quá trình thực thi
-          </CardDescription>
         </CardHeader>
         <CardContent>
-          <ScrollArea className="h-64 w-full rounded border p-4">
+          <ScrollArea className="h-56 w-full rounded border p-4">
             <div className="space-y-1">
               {logs.length === 0 ? (
-                <div className="text-sm text-muted-foreground text-center py-4">
-                  Chưa có logs
-                </div>
+                <p className="text-sm text-muted-foreground text-center py-4">Chưa có logs</p>
               ) : (
-                logs.map((log, index) => (
-                  <div key={index} className="text-sm font-mono">
+                logs.map((log, i) => (
+                  <div key={i} className="text-sm font-mono">
                     {log}
                   </div>
                 ))

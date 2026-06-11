@@ -1,328 +1,108 @@
 # Form Auto-Fill Tool
 
-> **⚠️ QUAN TRỌNG: Đây là dự án mục đích học tập, chúng tôi không chịu trách nhiệm mọi trường hợp. Vui lòng chỉ để tham khảo.**
+**Ngôn ngữ:** Tiếng Việt | [English](README.en.md)
 
-Một công cụ desktop tự động điền form trực tuyến với giao diện hiện đại, hỗ trợ tất cả loại câu hỏi và nhiều chiến lược điền khác nhau.
+> **⚠️ QUAN TRỌNG: Đây là dự án mục đích học tập. Chỉ dùng để tham khảo, tự chịu trách nhiệm khi sử dụng.**
 
-## 🚀 Tính năng chính
+Công cụ desktop tự động quét và điền Google Form, với giao diện hiện đại. Quét trọn vẹn form nhiều trang trong một lần, hỗ trợ nhiều chiến lược điền.
 
-### 📋 Quét Form
-- **Tự động phát hiện**: Quét và phân tích cấu trúc form trực tuyến
-- **Đa loại câu hỏi**: Hỗ trợ text, multiple choice, checkbox, dropdown, linear scale, date, time, file upload
-- **Multi-page support**: Quét form có nhiều trang
-- **Anti-detection**: Stealth mode để tránh bị phát hiện
+## Tính năng
 
-### ⚙️ Cấu hình linh hoạt
-- **Chiến lược điền**: Random, Fixed, Sequential, Pattern, Skip
-- **Chọn options**: Chọn cụ thể options cho multiple choice/checkbox
-- **Execution settings**: Số lần chạy, delay, headless mode
-- **Lưu/Load config**: Lưu và tải lại cấu hình
+- **Quét đầy đủ**: Đọc trực tiếp cấu trúc form nhúng trong trang (`FB_PUBLIC_LOAD_DATA_`), lấy 100% câu hỏi của **tất cả các trang** trong một lần load, không cần bấm "Tiếp" hay điền trước.
+- **Đa loại câu hỏi**: text, paragraph, multiple choice, checkbox, dropdown, linear scale, date, time.
+- **Form nhiều trang (sections)**: Tự nhận biết số trang, định vị câu hỏi theo nội dung (chịu được section header / rẽ nhánh) và chuyển trang đúng thứ tự.
+- **Kế hoạch trả lời theo tỉ lệ (weighted)**: Mỗi đáp án có trọng số %; chọn 1 thì theo tỉ lệ tương đối, checkbox thì xác suất độc lập kèm min/max số lựa chọn.
+- **Quy trình JSON + AI**: Xuất kế hoạch ra JSON (kèm hướng dẫn cho AI điền nội dung & tỉ lệ), import lại và **validate nghiêm** trước khi chạy.
+- **Dry-run bắt buộc**: Điền thử toàn bộ nhưng KHÔNG gửi, chụp màn hình trang cuối để duyệt trước khi chạy thật.
+- **Báo cáo phân phối & ảnh lỗi**: Thống kê thực tế từng đáp án đã chọn; tự chụp màn hình khi có lỗi.
+- **Anti-detection**: Dùng [`puppeteer-real-browser`](https://github.com/zfcsoftware/puppeteer-real-browser) (rebrowser + ghost-cursor) và tự xử lý Cloudflare Turnstile.
+- **Theo dõi tiến độ & logs**: Cập nhật real-time, ghi log bằng Winston.
 
-### 🎯 Điền Form thông minh
-- **Human-like behavior**: Random delays, realistic typing
-- **Progress tracking**: Theo dõi tiến độ real-time
-- **Error handling**: Xử lý lỗi và retry logic
-- **Screenshot logging**: Chụp ảnh màn hình khi có lỗi
+## Công nghệ
 
-### 📊 Analytics & Logging
-- **Performance metrics**: Thống kê hiệu suất
-- **Error analysis**: Phân tích lỗi chi tiết
-- **Activity logs**: Log đầy đủ hoạt động
-- **Export reports**: Xuất báo cáo
-
-## 🛠️ Công nghệ sử dụng
-
-- **Frontend**: Electron + React + TypeScript
-- **UI Framework**: Shadcn/ui + Tailwind CSS
-- **Automation**: Playwright với stealth plugin
-- **Parsing**: node-fetch + jsdom
+- **Desktop**: Electron + React + TypeScript
+- **UI**: shadcn/ui + Tailwind CSS
+- **Automation**: puppeteer-real-browser (puppeteer-core)
 - **Logging**: Winston
-- **Date/Time**: date-fns
 
-## 📦 Cài đặt
+## Cài đặt
 
-### Yêu cầu hệ thống
-- Node.js 18+ 
-- npm hoặc yarn
-- Windows/macOS/Linux
+Yêu cầu: Node.js 18+.
 
-### Cài đặt dependencies
 ```bash
-# Clone repository
-git clone https://github.com/your-username/form-filler.git
-cd form-filler
-
-# Cài đặt dependencies
 npm install
-
-# Cài đặt Playwright browsers
-npx playwright install chromium
 ```
 
-## 🚀 Chạy ứng dụng
+`puppeteer-real-browser` tự tải Chrome khi chạy lần đầu. Trên Linux cần `xvfb`:
 
-### Development mode
 ```bash
-# Chạy cả main process và renderer
+sudo apt-get install xvfb
+```
+
+## Chạy ứng dụng
+
+```bash
+# Development (main + renderer)
 npm run dev
 
-# Hoặc chạy riêng lẻ
-npm run dev:main    # Main process
-npm run dev:renderer # Renderer process
-```
-
-### Production build
-```bash
-# Build toàn bộ ứng dụng
+# Production build
 npm run build
-
-# Chạy production build
 npm start
 ```
 
-## 📖 Hướng dẫn sử dụng
+## Cách dùng
 
-### 1. Quét Form
-1. Mở ứng dụng
-2. Nhập URL form vào ô "Form URL"
-3. Click "Quét Form"
-4. Đợi tool phân tích và hiển thị câu hỏi
+1. **Quét Form**: Dán URL Google Form (`https://docs.google.com/forms/d/e/.../viewform`) rồi bấm "Quét Form". App tạo sẵn một **kế hoạch trả lời** mẫu (tỉ lệ chia đều).
+2. **Kế hoạch trả lời**: Chỉnh tỉ lệ % từng đáp án bằng slider, hoặc:
+   - **Xuất JSON** → gửi file cho AI (file có sẵn phần `_instructions` hướng dẫn AI điền nội dung text & tỉ lệ) → **Nhập JSON** lại.
+   - App **validate nghiêm**: câu bắt buộc thiếu đáp án, email sai định dạng, đáp án không nằm trong options... đều bị báo đỏ và chặn chạy.
+3. **Thực thi**:
+   - **Chạy thử (dry-run)** trước: điền hết các trang nhưng KHÔNG gửi, chụp màn hình để bạn duyệt.
+   - Sau khi dry-run đạt, đặt số lần chạy / độ trễ / ẩn-hiện browser rồi **Chạy thật**.
+   - Xem **báo cáo phân phối** (mỗi đáp án đã chọn bao nhiêu lần) và ảnh chụp khi có lỗi.
 
-### 2. Cấu hình chiến lược điền
-1. Xem danh sách câu hỏi đã quét
-2. Chọn chiến lược cho từng câu hỏi:
-   - **Random**: Điền ngẫu nhiên
-   - **Fixed**: Điền giá trị cố định
-   - **Sequential**: Điền tuần tự
-   - **Pattern**: Điền theo mẫu
-   - **Skip**: Bỏ qua
-3. Cho multiple choice/checkbox: Chọn options cụ thể
-4. Cấu hình execution settings (số lần chạy, delay, headless)
+## Tỉ lệ (weighted) hoạt động thế nào
 
-### 3. Lưu cấu hình
-1. Nhập tên cấu hình
-2. Click "Lưu cấu hình"
-3. Cấu hình sẽ được lưu để sử dụng sau
+| Loại câu hỏi                              | Ý nghĩa `weight`                                                        |
+| ----------------------------------------- | ---------------------------------------------------------------------- |
+| multiple_choice / dropdown / linear_scale | Tỉ lệ **tương đối**, chọn đúng 1 (vd `Có:90, Không:10` → ~90% "Có")     |
+| checkbox                                  | Xác suất **độc lập** (0..100%) mỗi option được tick, kèm min/max        |
+| text / paragraph / date / time            | Danh sách câu trả lời mẫu, chọn 1 theo tỉ lệ                            |
 
-### 4. Tải cấu hình đã lưu
-1. Click "Xem cấu hình đã lưu"
-2. Chọn cấu hình từ danh sách
-3. Click để load cấu hình
-
-### 5. Thực thi điền form
-1. Click "Bắt đầu điền"
-2. Theo dõi tiến độ real-time
-3. Xem kết quả và logs
-
-## 🎛️ Chiến lược điền
-
-### Random Strategy
-```javascript
-// Điền ngẫu nhiên
-strategy: 'random'
-```
-
-### Fixed Strategy
-```javascript
-// Điền giá trị cố định
-strategy: 'fixed',
-value: 'John Doe'
-```
-
-### Pattern Strategy
-```javascript
-// Điền theo mẫu
-strategy: 'pattern',
-value: 'user{random}@example.com'
-```
-
-### Sequential Strategy
-```javascript
-// Điền tuần tự từ danh sách
-strategy: 'sequential',
-value: '["Option 1", "Option 2", "Option 3"]'
-```
-
-## 📁 Cấu trúc dự án
+## Cấu trúc dự án
 
 ```
-form-filler/
-├── src/
-│   ├── main/                 # Electron main process
-│   │   ├── main.ts          # Main entry point
-│   │   ├── preload.ts       # Preload script
-│   │   ├── filler/          # Form filling logic
-│   │   ├── scanner/         # Form scanning logic
-│   │   ├── utils/           # Utilities
-│   │   └── ...
-│   └── renderer/            # React renderer process
-│       ├── src/
-│       │   ├── components/  # React components
-│       │   ├── lib/         # Utilities
-│       │   └── App.tsx      # Main app component
-│       └── index.html       # HTML template
-├── configs/                 # Saved configurations
-├── logs/                    # Application logs
-├── dist/                    # Build output
-└── package.json
+src/
+├── main/        # Electron main process + preload (IPC)
+├── scanner/     # FormScanner: đọc FB_PUBLIC_LOAD_DATA_, fallback DOM
+├── filler/      # FormFiller: điền weighted theo trang, dry-run, ảnh lỗi, báo cáo
+├── utils/       # AnswerPlan (template + validate + weighted), ConfigManager, Logger
+└── renderer/    # React UI (scan → plan → execute)
+configs/         # Cấu hình đã lưu (JSON)
+logs/            # Log của Winston + logs/screenshots (ảnh dry-run & lỗi)
 ```
 
-## 🔧 Cấu hình
+## Scripts
 
-### Environment Variables
 ```bash
-NODE_ENV=development  # development/production
-LOG_LEVEL=info       # error/warn/info/debug
+npm run dev        # Chạy dev (main + renderer)
+npm run build      # Build main + renderer
+npm start          # Chạy bản đã build
+npm run lint       # ESLint
+npm run typecheck  # Kiểm tra type cho main + renderer
+npm run dist       # Đóng gói app (electron-builder)
 ```
 
-### Config Files
-- **configs/**: Lưu trữ cấu hình form
-- **logs/**: Log files và screenshots
-- **package.json**: Dependencies và scripts
+## Giới hạn đã biết
 
-## 🧪 Testing
+- File upload và grid (multiple choice grid / checkbox grid) chưa được hỗ trợ điền.
+- Form yêu cầu đăng nhập Google không quét được (không công khai).
+- Cấu trúc `FB_PUBLIC_LOAD_DATA_` do Google định nghĩa, có thể đổi trong tương lai; khi đó scanner tự lùi về chế độ quét DOM của trang hiện tại.
 
-### Test Mock Forms
-```bash
-# Test với mock forms
-node test-all-mock-forms.js
+## License
 
-# Test comprehensive form
-node test-comprehensive-form.js
+MIT - xem [LICENSE](LICENSE).
 
-# Test T-shirt form
-node test-mock-form.js
-```
+## Disclaimer
 
-### Test Real Forms
-```bash
-# Test với Google Form thật
-node test-real-form.js
-```
-
-## 📊 Monitoring & Logs
-
-### Log Files
-- **logs/app.log**: Application logs
-- **logs/error.log**: Error logs
-- **logs/screenshots/**: Screenshots khi có lỗi
-
-### Log Levels
-- **ERROR**: Lỗi nghiêm trọng
-- **WARN**: Cảnh báo
-- **INFO**: Thông tin chung
-- **DEBUG**: Debug information
-
-## 🚨 Troubleshooting
-
-### Common Issues
-
-#### 1. Form không quét được
-```bash
-# Kiểm tra URL có đúng không
-# Đảm bảo form không yêu cầu đăng nhập
-# Thử với mock form trước
-```
-
-#### 2. Browser không mở
-```bash
-# Cài đặt Playwright browsers
-npx playwright install chromium
-
-# Kiểm tra headless mode
-# Thử với headless: false
-```
-
-#### 3. Form không điền được
-```bash
-# Kiểm tra cấu hình chiến lược
-# Xem logs để debug
-# Thử với form đơn giản trước
-```
-
-### Debug Mode
-```bash
-# Chạy với debug logs
-NODE_ENV=development npm run dev
-
-# Xem logs chi tiết
-tail -f logs/app.log
-```
-
-## 🤝 Contributing
-
-### Development Setup
-```bash
-# Fork repository
-git clone https://github.com/your-username/form-filler.git
-cd form-filler
-
-# Install dependencies
-npm install
-
-# Run in development
-npm run dev
-```
-
-### Code Style
-- TypeScript strict mode
-- ESLint + Prettier
-- Conventional commits
-- Component-based architecture
-
-## 📄 License
-
-MIT License - Xem file [LICENSE](LICENSE) để biết thêm chi tiết.
-
-## ⚠️ Disclaimer
-
-**QUAN TRỌNG: Đây là dự án mục đích học tập, chúng tôi không chịu trách nhiệm mọi trường hợp. Vui lòng chỉ để tham khảo.**
-
-- Tool này chỉ dành cho mục đích học tập và nghiên cứu
-- Không sử dụng cho mục đích spam hoặc vi phạm ToS
-- Tuân thủ Terms of Service của các dịch vụ form
-- Sử dụng có trách nhiệm và đạo đức
-
-## 📞 Support
-
-- **Issues**: [GitHub Issues](https://github.com/your-username/form-filler/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/your-username/form-filler/discussions)
-- **Documentation**: [Wiki](https://github.com/your-username/form-filler/wiki)
-
-## 🎯 Roadmap
-
-### Phase 1: Core Features ✅
-- [x] Form scanning
-- [x] Basic form filling
-- [x] Configuration management
-- [x] Progress tracking
-
-### Phase 2: Enhanced Features ✅
-- [x] Advanced scanning
-- [x] Smart fill strategies
-- [x] Template system
-- [x] Analytics dashboard
-
-### Phase 3: User Experience ✅
-- [x] Drag & drop interface
-- [x] Validation rules
-- [x] Scheduling
-- [x] Notifications
-
-### Phase 4: Advanced Features ✅
-- [x] Cloud sync
-- [x] Team collaboration
-- [x] API integration
-- [x] Custom scripts
-
-## 🙏 Acknowledgments
-
-- [Playwright](https://playwright.dev/) - Browser automation
-- [Electron](https://electronjs.org/) - Desktop app framework
-- [React](https://reactjs.org/) - UI library
-- [Shadcn/ui](https://ui.shadcn.com/) - UI components
-- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
-
----
-
-**Made with ❤️ for educational purposes**
+Dự án phục vụ học tập và nghiên cứu. Không dùng để spam hay vi phạm điều khoản dịch vụ. Sử dụng có trách nhiệm.

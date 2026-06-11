@@ -1,9 +1,11 @@
-import { app, BrowserWindow, ipcMain, dialog } from 'electron';
+import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron';
 import * as path from 'path';
+import * as fs from 'fs/promises';
 import { FormScanner } from '../scanner/FormScanner';
 import { FormFiller } from '../filler/FormFiller';
 import { ConfigManager } from '../utils/ConfigManager';
 import { Logger } from '../utils/Logger';
+import { buildPlanTemplate, validatePlan } from '../utils/AnswerPlan';
 
 class MainProcess {
   private mainWindow: BrowserWindow | null = null;
@@ -37,30 +39,17 @@ class MainProcess {
 
     // Load the renderer
     if (process.env.NODE_ENV === 'development') {
-      // Try different ports that Vite might use
-      const ports = [3000, 3001, 3002, 3003, 3004, 3005];
-      let loaded = false;
-      
-      for (const port of ports) {
-        try {
-          await this.mainWindow.loadURL(`http://localhost:${port}`);
-          loaded = true;
-          this.logger.info(`Successfully loaded renderer from port ${port}`);
-          break;
-        } catch (error: any) {
-          this.logger.warn(`Failed to load from port ${port}: ${error?.message || String(error)}`);
-          // Continue to next port
-        }
+      const devUrl = process.env.VITE_DEV_SERVER_URL || 'http://localhost:3000';
+      try {
+        await this.mainWindow.loadURL(devUrl);
+        this.logger.info(`Loaded renderer from ${devUrl}`);
+      } catch (error: any) {
+        this.logger.error(`Failed to load renderer from ${devUrl}`, error);
+        this.mainWindow.loadURL('data:text/html,<h1>Error: Could not load renderer. Is the Vite dev server running?</h1>');
       }
-      
-      if (!loaded) {
-        this.logger.error('Could not load renderer from any port');
-        this.mainWindow.loadURL('data:text/html,<h1>Error: Could not load renderer</h1>');
-      }
-      
       this.mainWindow.webContents.openDevTools();
     } else {
-      this.mainWindow.loadFile(path.join(__dirname, '../../renderer/src/renderer/index.html'));
+      await this.mainWindow.loadFile(path.join(__dirname, '../../renderer/index.html'));
     }
 
       this.mainWindow.once('ready-to-show', () => {
@@ -80,6 +69,7 @@ class MainProcess {
     // Scan form
     ipcMain.handle('scan-form', async (_event, formUrl: string) => {
       try {
+        this.assertValidFormUrl(formUrl);
         this.logger.info('Starting form scan', { formUrl });
         const result = await this.formScanner.scanForm(formUrl);
         this.logger.info('Form scan completed', { questionCount: result.questions.length });
@@ -90,53 +80,99 @@ class MainProcess {
       }
     });
 
-    // Save config
-    ipcMain.handle('save-config', async (_event, config: any) => {
+    // Build an editable answer-plan template from a scan result.
+    ipcMain.handle('build-plan', async (_event, scanResult: any) => {
       try {
-        const savedPath = await this.configManager.saveConfig(config);
-        this.logger.info('Config saved', { path: savedPath });
-        return savedPath;
+        const plan = buildPlanTemplate(scanResult.questions, {
+          formUrl: scanResult.formUrl,
+          formTitle: scanResult.formTitle,
+          pageCount: scanResult.pageCount ?? 1,
+        });
+        return plan;
       } catch (error) {
-        this.logger.error('Failed to save config', error);
+        this.logger.error('Failed to build plan', error);
         throw error;
       }
     });
 
-    // Load config
-    ipcMain.handle('load-config', async (_event, configName: string) => {
-      try {
-        const config = await this.configManager.loadConfig(configName);
-        this.logger.info('Config loaded', { configName });
-        return config;
-      } catch (error) {
-        this.logger.error('Failed to load config', error);
-        throw error;
-      }
+    // Validate a plan (strict). Returns { valid, issues }.
+    ipcMain.handle('validate-plan', async (_event, plan: any) => {
+      return validatePlan(plan);
     });
 
-    // List configs
+    // Export plan to a JSON file chosen by the user.
+    ipcMain.handle('export-plan', async (_event, plan: any) => {
+      const { canceled, filePath } = await dialog.showSaveDialog(this.mainWindow!, {
+        title: 'Xuất kế hoạch trả lời (JSON)',
+        defaultPath: `answer-plan-${Date.now()}.json`,
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+      if (canceled || !filePath) return null;
+      await fs.writeFile(filePath, JSON.stringify(plan, null, 2), 'utf-8');
+      this.logger.info('Plan exported', { filePath });
+      return filePath;
+    });
+
+    // Import a plan JSON file chosen by the user. Returns { plan, validation }.
+    ipcMain.handle('import-plan', async () => {
+      const { canceled, filePaths } = await dialog.showOpenDialog(this.mainWindow!, {
+        title: 'Nhập kế hoạch trả lời (JSON)',
+        properties: ['openFile'],
+        filters: [{ name: 'JSON', extensions: ['json'] }],
+      });
+      if (canceled || filePaths.length === 0) return null;
+      const raw = await fs.readFile(filePaths[0], 'utf-8');
+      let plan: any;
+      try {
+        plan = JSON.parse(raw);
+      } catch {
+        throw new Error('File JSON không hợp lệ (parse lỗi).');
+      }
+      const validation = validatePlan(plan);
+      return { plan, validation };
+    });
+
+    // Save / load / list plan configs (stored as JSON under configs/).
+    ipcMain.handle('save-config', async (_event, name: string, plan: any, execution: any) => {
+      return this.configManager.savePlanConfig(name, plan, execution);
+    });
+    ipcMain.handle('load-config', async (_event, name: string) => {
+      return this.configManager.loadPlanConfig(name);
+    });
     ipcMain.handle('list-configs', async () => {
-      try {
-        const configs = await this.configManager.listConfigs();
-        return configs;
-      } catch (error) {
-        this.logger.error('Failed to list configs', error);
-        throw error;
-      }
+      return this.configManager.listConfigs();
     });
 
-    // Start filling
-    ipcMain.handle('start-filling', async (_event, config: any) => {
+    // Start filling (dry-run or real). Validates plan again before running.
+    ipcMain.handle('start-filling', async (_event, payload: any) => {
       try {
-        this.logger.info('Starting form filling', { runs: config.executionSettings.runs });
-        
-        // Send progress updates to renderer
+        const { plan, execution, dryRun } = payload || {};
+        this.assertValidFormUrl(plan?.formUrl);
+
+        const validation = validatePlan(plan);
+        if (!validation.valid) {
+          const firstErrors = validation.issues
+            .filter((i) => i.severity === 'error')
+            .slice(0, 5)
+            .map((i) => `• ${i.question}: ${i.message}`)
+            .join('\n');
+          throw new Error(`Kế hoạch chưa hợp lệ, không thể chạy:\n${firstErrors}`);
+        }
+
+        this.logger.info('Starting form filling', { runs: execution?.runs, dryRun });
         const progressCallback = (progress: any) => {
           this.mainWindow?.webContents.send('filling-progress', progress);
         };
 
-        const result = await this.formFiller.startFilling(config, progressCallback);
-        this.logger.info('Form filling completed', result);
+        const result = await this.formFiller.startFilling(
+          { plan, execution, dryRun: !!dryRun },
+          progressCallback
+        );
+        this.logger.info('Form filling completed', {
+          successCount: result.successCount,
+          errorCount: result.errorCount,
+          dryRun: result.dryRun,
+        });
         return result;
       } catch (error) {
         this.logger.error('Form filling failed', error);
@@ -144,23 +180,31 @@ class MainProcess {
       }
     });
 
-    // Select file dialog
-    ipcMain.handle('select-file', async () => {
-      try {
-        const result = await dialog.showOpenDialog(this.mainWindow!, {
-          properties: ['openFile'],
-          filters: [
-            { name: 'All Files', extensions: ['*'] },
-            { name: 'Images', extensions: ['jpg', 'jpeg', 'png', 'gif'] },
-            { name: 'Documents', extensions: ['pdf', 'doc', 'docx', 'txt'] },
-          ],
-        });
-        return result;
-      } catch (error) {
-        this.logger.error('Failed to select file', error);
-        throw error;
-      }
+    // Open a saved screenshot in the OS image viewer.
+    ipcMain.handle('open-screenshot', async (_event, filePath: string) => {
+      await shell.openPath(filePath);
     });
+  }
+
+  /** Validates that a string is a public Google Forms URL. Throws otherwise. */
+  private assertValidFormUrl(formUrl: unknown): void {
+    if (typeof formUrl !== 'string' || formUrl.trim().length === 0) {
+      throw new Error('Form URL is required');
+    }
+    let parsed: URL;
+    try {
+      parsed = new URL(formUrl);
+    } catch {
+      throw new Error('Form URL is not a valid URL');
+    }
+    if (parsed.protocol !== 'https:') {
+      throw new Error('Form URL must use HTTPS');
+    }
+    const isGoogleForm =
+      parsed.hostname === 'docs.google.com' && parsed.pathname.includes('/forms/');
+    if (!isGoogleForm) {
+      throw new Error('Only public Google Forms URLs (docs.google.com/forms/...) are supported');
+    }
   }
 
   public async initialize(): Promise<void> {
